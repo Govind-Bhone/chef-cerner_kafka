@@ -81,3 +81,6 @@ suites:
       mirror_maker:
         mirror_source1.properties:
           zookeeper.connect: 10.10.10.10:2181
+          group.id: test-mirror
+        mirror_target.properties:
+          metadata.broker.list: "10.10.10.11:9092"

@@ -80,23 +80,6 @@ describe 'kafka broker' do
     end
   end
 
-  it 'should export all environment variables' do
-    # For some reason having su run echo itself does not pickup the environment variables but it works if run in another shell script
-    # This is ok since this is how we start Kafka (via scripts)
-    File.open("/tmp/env_jmx.sh", 'w') { |file| file.write("echo \"$JMX_PORT\"") }
-    File.open("/tmp/env_bogus.sh", 'w') { |file| file.write("echo \"$BOGUS_VAR\"") }
-
-    # Make the scripts executable
-    Kernel.system "chmod 755 /tmp/env_jmx.sh"
-    Kernel.system "chmod 755 /tmp/env_bogus.sh"
-
-    output = `su -l kafka -c "/tmp/env_jmx.sh 2> /dev/null"`
-    expect(output).to include("9999")
-
-    output = `su -l kafka -c "/tmp/env_bogus.sh 2> /dev/null"`
-    expect(output).to include("TEST_VALUE")
-  end
-
   it 'should be able to create a topic' do
     # Pick a random topic so if we re-run the tests on the same VM it won't fail with 'topic already created'
     topicName = "testNewTopic_" + rand(100000).to_s

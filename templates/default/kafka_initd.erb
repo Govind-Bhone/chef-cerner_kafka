@@ -18,12 +18,16 @@ CURRENT_WAIT=0
 TIMEOUT=<%= node["kafka"]["shutdown_timeout"] %>
 KAFKA_MAIN=kafka.Kafka
 
-# Setup JMX port environment variable, if set
-<% if !node["kafka"]["env_vars"]["JMX_PORT"].nil? and !node["kafka"]["env_vars"]["JMX_PORT"].empty? -%>
-SETUP_ENV="env JMX_PORT=<%= node["kafka"]["env_vars"]["JMX_PORT"] %>"
-<% else -%>
+# build env string.
 SETUP_ENV=""
+<% node['kafka']['env_vars'].keys.each do |evar| -%>
+<% if !node["kafka"]["env_vars"][evar].nil? and !node["kafka"]["env_vars"][evar].empty? -%>
+SETUP_ENV="$SETUP_ENV <%= evar %>=\"<%= node["kafka"]["env_vars"][evar] %>\""
 <% end -%>
+<% end -%>
+if [ -n "$SETUP_ENV" ]; then
+  SETUP_ENV="env $SETUP_ENV"
+fi
 
 # We have to pipe STDOUT here otherwise it will print logs when running script
 START_SERVER_CMD="$SETUP_ENV nohup <%= node["kafka"]["install_dir"] %>/bin/kafka-server-start.sh <%= node["kafka"]["install_dir"] %>/config/server.properties >> <%= node["kafka"]["service"]["stdout"] %>  2>> <%= node["kafka"]["service"]["stderr"] %> &"

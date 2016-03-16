@@ -33,7 +33,7 @@ MIRROR_PARAMS="\
 <% node['kafka']['mirror_maker']['mirror_sources'].each do |src| %>
 --consumer.config <%= node['kafka']['install_dir'] %>/config/<%= src %> \
 <% end %>
-<% if !node['kafka']['mirror_maker']['new_consumer'].nil? %>
+<% if node['kafka']['mirror_maker']['new_consumer'] %>
 --new.consumer \
 <% end %>
 --num.streams <%= node['kafka']['mirror_maker']['streams'] %> \
