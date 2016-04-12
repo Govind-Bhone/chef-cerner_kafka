@@ -12,6 +12,10 @@ default["kafka"]["download_url"] = "https://archive.apache.org/dist/kafka"
 default["kafka"]["base_dir"]  = "/opt"
 default["kafka"]["log_dir"] = "/var/log/kafka"
 
+kafka_user = node["kafka"]["user"]
+node.default["ulimit"]["users"][kafka_user]["filehandle_limit"] = 65536
+node.default["ulimit"]["users"][kafka_user]["process_limit"] = 1024
+
 # Set Log file for kafka init script stdout/stderr
 default["kafka"]["service"]["stdout"] = File.join node["kafka"]["log_dir"], "kafka_init_stdout.log"
 default["kafka"]["service"]["stderr"] = File.join node["kafka"]["log_dir"], "kafka_init_stderr.log"

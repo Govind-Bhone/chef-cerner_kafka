@@ -19,12 +19,6 @@ node.default["kafka"]["log4j.properties"]["log4j.appender.requestAppender.File"]
 node.default["kafka"]["log4j.properties"]["log4j.appender.controllerAppender.File"] = File.join node["kafka"]["log_dir"], "controller.log"
 
 # Set default limits
-
-# We currently ignore FC047 - http://www.foodcritic.io/#FC047) due to a bug in foodcritic giving false
-# positives (https://github.com/acrmp/foodcritic/issues/225)
-node.default["ulimit"]["users"][node["kafka"]["user"]]["filehandle_limit"] = 32768 # ~FC047
-node.default["ulimit"]["users"][node["kafka"]["user"]]["process_limit"] = 1024 # ~FC047
-
 include_recipe "ulimit"
 
 include_recipe "cerner_kafka::install"
